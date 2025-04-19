@@ -9,44 +9,48 @@
   />
   <input type="submit" value="Search" />
 </form>
-<table>
-  <thead>
-    <tr>
-      <th>First</th>
-      <th>Last</th>
-      <th>Phone</th>
-      <th>Email</th>
-      <th />
-    </tr>
-  </thead>
-  <tbody>
-    {% for contact in contacts %}
-    <tr>
-      <td>{{ contact.first }}</td>
-      <td>{{ contact.last }}</td>
-      <td>{{ contact.phone }}</td>
-      <td>{{ contact.email }}</td>
-      <td>
-        <a href="/contacts/{{ contact.id }}/edit">Edit</a>
-        <a href="/contacts/{{ contact.id }}">View</a>
-      </td>
-    </tr>
-    {% endfor %}
-    {% if contacts|length == 10 %}
-    <tr>
-      <td>
-        <button
-          hx-target="closest tr"
-          hx-swap="outerHTML"
-          hx-select="tbody > tr"
-          hx-get="/contacts?page={{ page + 1 }}"
-        >
-          Load More
-        </button>
-      </td>
-    </tr>
-    {% endif %}
-  </tbody>
-</table>
-<p><a href="/contacts/new">Add Contact</a></p>
+<div style="max-height: 300px; overflow-y: auto; position: relative">
+  <table>
+    <thead>
+      <tr style="position: sticky; top: 0; background-color: white">
+        <th>First</th>
+        <th>Last</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      {% for contact in contacts %}
+      <tr>
+        <td>{{ contact.first }}</td>
+        <td>{{ contact.last }}</td>
+        <td>{{ contact.phone }}</td>
+        <td>{{ contact.email }}</td>
+        <td>
+          <a href="/contacts/{{ contact.id }}/edit">Edit</a>
+          <a href="/contacts/{{ contact.id }}">View</a>
+        </td>
+      </tr>
+      {% endfor %} {% if contacts|length == 10 %}
+      <tr colspan="5" style="text-align: center">
+        <td>
+          <span
+            hx-trigger="intersect once"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            hx-select="tbody > tr"
+            hx-get="/contacts?page={{ page + 1 }}"
+          >
+            Loading more...
+          </span>
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<div>
+  <p><a href="/contacts/new">Add Contact</a></p>
+</div>
 {% endblock %}

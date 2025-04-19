@@ -1,5 +1,4 @@
 from flask import Flask, flash, redirect, render_template, request
-from uuid import uuid4
 
 from db.handlers import delete, insert, read, update
 from db.schemas import Contact
