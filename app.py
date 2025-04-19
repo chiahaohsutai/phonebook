@@ -44,13 +44,13 @@ def contact_new_post():
 
 @route("/contacts/<contact_id>", strict_slashes=False)
 def contacts_view(contact_id: str):
-    contact = read({"_id": contact_id})
+    contact = read({ "$match": {"_id": contact_id}})
     return render_template("show.html", contact=contact[0])
 
 
 @route("/contacts/<contact_id>/edit", methods=["GET"], strict_slashes=False)
 def contacts_edit_get(contact_id: str):
-    contact = read({"_id": contact_id})
+    contact = read({ "$match": {"_id": contact_id}})
     return render_template("edit.html", contact=contact[0])
 
 
@@ -81,5 +81,5 @@ def contacts_email(contact_id: str):
     if not (email := request.args.get("email")):
         return ""
 
-    contacts = read({"email": {"$eq": email}})
+    contacts = read({ "$match": {"email": {"$eq": email}}})
     return "Email already exists" if len(contacts) > 0 else ""
