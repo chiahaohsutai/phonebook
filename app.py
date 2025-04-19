@@ -5,7 +5,7 @@ from db.handlers import delete, insert, read, update
 from db.schemas import Contact
 
 app = Flask(__name__)
-app.secret_key = uuid4().bytes
+app.secret_key = b"chia"
 route = app.route
 
 
@@ -16,13 +16,14 @@ def index():
 
 @route("/contacts", strict_slashes=False)
 def contacts():
+    page = int(request.args.get("page", 1))
     if not (q := request.args.get("q")):
-        contacts = read()
+        contacts = read({"$skip": (page - 1) * 10}, {"$limit": 10})
     else:
         conditions = [{"first": {"$eq": q}}, {"last": {"$eq": q}}]
-        contacts = read({"$or": conditions})
+        contacts = read({"$match": {"$or": conditions}})
 
-    return render_template("index.html", contacts=contacts)
+    return render_template("index.html", contacts=contacts, page=page)
 
 
 @route("/contacts/new", methods=["GET"], strict_slashes=False)
@@ -36,7 +37,7 @@ def contact_new_post():
     new_contact = Contact(**form.to_dict())
     if insert(new_contact):
         flash("Contact added successfully!", "success")
-        return redirect("/contacts")
+        return redirect("/contacts", code=303)
     else:
         return render_template("new.html", contact=new_contact)
 
@@ -61,15 +62,24 @@ def contacts_edit_post(contact_id: str):
 
     if update(updated_contact):
         flash("Contact updated successfully!", "success")
-        return redirect("/contacts")
+        return redirect("/contacts", code=303)
     else:
         return render_template("edit.html", contact=updated_contact)
 
 
-@route("/contacts/<contact_id>/delete", methods=["POST"], strict_slashes=False)
+@route("/contacts/<contact_id>", methods=["DELETE"], strict_slashes=False)
 def contacts_delete(contact_id: str):
     if delete(contact_id):
         flash("Contact deleted successfully!", "success")
     else:
         flash("Contact not found!", "error")
-    return redirect("/contacts")
+    return redirect("/contacts", code=303)
+
+
+@route("/contacts/<contact_id>/email", strict_slashes=False)
+def contacts_email(contact_id: str):
+    if not (email := request.args.get("email")):
+        return ""
+
+    contacts = read({"email": {"$eq": email}})
+    return "Email already exists" if len(contacts) > 0 else ""

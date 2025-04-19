@@ -8,11 +8,11 @@ mongo_client = MongoClient("mongodb://localhost:27017")
 collection = mongo_client["phonebook"]["contacts"]
 
 
-def read(query: dict[str, Any] = {}) -> list[Contact]:
+def read(*steps: dict[str, Any]) -> list[Contact]:
     """
     Query the database for contacts.
     """
-    cursor = collection.find(query)
+    cursor = collection.aggregate(list(steps))
     return [Contact(**document) for document in cursor]
 
 

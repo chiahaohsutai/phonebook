@@ -1,3 +1,5 @@
+{% extends 'layout.html' %}
+{% block content %}
 <form action="/contacts/new" method="post">
   <fieldset>
     <legend>Add a new contact</legend>
@@ -45,12 +47,15 @@
         name="email"
         placeholder="Email"
         value="{{ contact.email or '' }}"
+        hx-get="/contacts/{{ contact.id }}/email"
+        hx-trigger="keyup changed delay:500ms"
+        hx-target="next .error"
         required
       />
       <span class="error">{{ contact.errors.get('email') or '' }}</span>
     </p>
     <input type="submit" value="Add Contact" />
-    <input type="reset" value="Clear" />
     <a href="/contacts">Cancel</a>
   </fieldset>
 </form>
+{% endblock %}

@@ -1,7 +1,5 @@
-{% extends 'layout.html' %} 
-
+{% extends 'layout.html' %}
 {% block content %}
-
 <form action="/contacts" method="get" class="tool-bar">
   <label for="search">Search Term</label>
   <input
@@ -12,7 +10,6 @@
   />
   <input type="submit" value="Search" />
 </form>
-
 <table>
   <thead>
     <tr>
@@ -38,7 +35,15 @@
     {% endfor %}
   </tbody>
 </table>
-
+<div>
+  <span>
+    {% if page > 1 %}
+      <a href="/contacts?page={{ page - 1 }}">Previous</a>
+    {% endif %} 
+    {% if contacts|length == 10 %}
+      <a href="/contacts?page={{ page + 1 }}">Next</a>
+    {% endif %}
+  </span>
+</div>
 <p><a href="/contacts/new">Add Contact</a></p>
-
 {% endblock %}

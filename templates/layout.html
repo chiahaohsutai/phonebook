@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html>
-  <head></head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/static/js/htmx.js"></script>
+    <title>Phonebook</title>
+  </head>
   <title>Phonebook</title>
-  <body>
+  <body hx-boost="false">
     {% for message in get_flashed_messages() %}
-      <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}{% block content %}{% endblock %}
   </body>
 </html>
