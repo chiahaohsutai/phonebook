@@ -21,7 +21,8 @@ def contacts():
     else:
         conditions = [{"first": {"$eq": q}}, {"last": {"$eq": q}}]
         contacts = read({"$match": {"$or": conditions}})
-
+        if request.headers.get("HX-Trigger") == "search":
+            return render_template("rows.html", contacts=contacts)
     return render_template("index.html", contacts=contacts, page=page)
 
 
