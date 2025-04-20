@@ -1,51 +1,69 @@
-{% extends 'layout.html' %}
-{% block content %}
-<form action="/contacts" method="get" class="tool-bar">
+{% extends 'layout.html' %} {% block content %}
+<form
+  action="/contacts"
+  method="get"
+  hx-target="tbody"
+  hx-swap="innerHTML"
+  class="tool-bar"
+>
   <label for="search">Search Term</label>
   <input
     hx-get="/contacts"
-    hx-trigger="search, keyup delay:500ms changed"
+    hx-trigger="keyup delay:500ms changed"
     hx-target="tbody"
     hx-swap="innerHTML"
+    hx-push-url="true"
     id="search"
     type="search"
     name="q"
     value="{{ request.args.get('q') or '' }}"
+    hx-indicator="#spinner"
+  />
+  <img
+    id="spinner"
+    class="htmx-indicator"
+    src="/static/img/spinning-circles.svg"
+    alt="Request In Flight..."
+    style="width: 16px; height: 16px"
   />
   <input type="submit" value="Search" />
 </form>
-<div style="max-height: 300px; overflow-y: auto; position: relative">
-  <table>
-    <thead>
-      <tr style="position: sticky; top: 0; background-color: white">
-        <th>First</th>
-        <th>Last</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      {% include 'rows.html' %} 
-      {% if contacts|length == 10 %}
-      <tr colspan="5" style="text-align: center">
-        <td>
-          <span
-            hx-trigger="intersect once"
-            hx-target="closest tr"
-            hx-swap="outerHTML"
-            hx-select="tbody > tr"
-            hx-get="/contacts?page={{ page + 1 }}"
-          >
-            Loading more...
-          </span>
-        </td>
-      </tr>
-      {% endif %}
-    </tbody>
-  </table>
-</div>
+<form>
+  <div style="max-height: 300px; overflow-y: auto; position: relative">
+    <table>
+      <thead>
+        <tr style="position: sticky; top: 0; background-color: white">
+          <th />
+          <th>First</th>
+          <th>Last</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {% include 'rows.html' %}
+      </tbody>
+    </table>
+  </div>
+  <button
+    hx-delete="/contacts"
+    hx-confirm="Are you sure you want to delete these contacts?"
+    hx-target="body"
+  >
+    Delete Selected Contacts
+  </button>
+</form>
 <div>
-  <p><a href="/contacts/new">Add Contact</a></p>
+  <p>
+    <a href="/contacts/new">Add Contact</a>&nbsp;
+    <span hx-get="/contacts/count" hx-trigger="revealed">
+      <img
+        id="spinner"
+        class="htmx-indicator"
+        src="/static/img/spinning-circles.svg"
+      />
+    </span>
+  </p>
 </div>
 {% endblock %}

@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="static/styles.css" />
     <script src="/static/js/htmx.js"></script>
     <title>Phonebook</title>
   </head>
   <title>Phonebook</title>
-  <body hx-boost="false">
+  <body hx-boost="true">
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
     {% endfor %}{% block content %}{% endblock %}

@@ -16,6 +16,13 @@ def read(*steps: dict[str, Any]) -> list[Contact]:
     return [Contact(**document) for document in cursor]
 
 
+def count() -> int:
+    """
+    Count the number of contacts in the database.
+    """
+    return collection.count_documents({})
+
+
 def insert(contact: Contact) -> bool:
     """
     Insert a new contact into the database.
@@ -72,9 +79,12 @@ def update(contact: Contact) -> bool:
         return False
 
 
-def delete(contact_id: str) -> bool:
+def delete(contact_id: str | list[str]) -> bool:
     """
     Delete a contact from the database.
     """
-    result = collection.delete_one({"_id": contact_id})
+    if not isinstance(contact_id, list):
+        contact_id = [contact_id]
+
+    result = collection.delete_many({"_id": {"$in": contact_id}})
     return result.deleted_count > 0
