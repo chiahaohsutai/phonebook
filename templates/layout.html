@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="static/styles.css" />
     <script src="/static/js/htmx.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <title>Phonebook</title>
   </head>
-  <title>Phonebook</title>
   <body hx-boost="true">
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>

@@ -3,8 +3,6 @@ from flask import Flask, flash, redirect, render_template, request
 from db.handlers import count, delete, insert, read, update
 from db.schemas import Contact
 
-import json
-
 app = Flask(__name__)
 app.secret_key = b"chia"
 route = app.route

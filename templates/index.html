@@ -28,7 +28,23 @@
   />
   <input type="submit" value="Search" />
 </form>
-<form>
+<form x-data="{ selected: [] }">
+  <template x-if="selected.length > 0">
+    <div class="box info tool-bar">
+      <slot x-text="selected.length"></slot>
+      contacts selected
+
+      <button
+        type="button"
+        class="bad bg color border"
+        @click="htmx.ajax('DELETE', '/contacts', { source: $root, target: document.body })"
+      >
+        Delete
+      </button>
+      <hr aria-orientation="vertical" />
+      <button type="button" @click="selected=[]">Cancel</button>
+    </div>
+  </template>
   <div style="max-height: 300px; overflow-y: auto; position: relative">
     <table>
       <thead>
